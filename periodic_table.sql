@@ -49,8 +49,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.elements (
     atomic_number integer NOT NULL,
-    symbol character varying(2),
-    name character varying(40)
+    symbol character varying(2) NOT NULL,
+    name character varying(40) NOT NULL
 );
 
 
@@ -64,12 +64,53 @@ CREATE TABLE public.properties (
     atomic_number integer NOT NULL,
     type character varying(30),
     atomic_mass numeric(9,6) NOT NULL,
-    melting_point numeric,
-    boiling_point numeric
+    melting_point_celsius numeric NOT NULL,
+    boiling_point_celsius numeric NOT NULL
 );
 
 
 ALTER TABLE public.properties OWNER TO freecodecamp;
+
+--
+-- Name: types; Type: TABLE; Schema: public; Owner: freecodecamp
+--
+
+CREATE TABLE public.types (
+    type_id integer NOT NULL,
+    type character varying(30) NOT NULL
+);
+
+
+ALTER TABLE public.types OWNER TO freecodecamp;
+
+--
+-- Name: types_type_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.types_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.types_type_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: types_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.types_type_id_seq OWNED BY public.types.type_id;
+
+
+--
+-- Name: types type_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.types ALTER COLUMN type_id SET DEFAULT nextval('public.types_type_id_seq'::regclass);
+
 
 --
 -- Data for Name: elements; Type: TABLE DATA; Schema: public; Owner: freecodecamp
@@ -102,6 +143,19 @@ INSERT INTO public.properties VALUES (1000, 'metalloid', 1.000000, 10, 100);
 
 
 --
+-- Data for Name: types; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+--
+
+
+
+--
+-- Name: types_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.types_type_id_seq', 1, false);
+
+
+--
 -- Name: elements elements_atomic_number_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
@@ -110,11 +164,27 @@ ALTER TABLE ONLY public.elements
 
 
 --
+-- Name: elements elements_name_unique; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_name_unique UNIQUE (name);
+
+
+--
 -- Name: elements elements_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
 ALTER TABLE ONLY public.elements
     ADD CONSTRAINT elements_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: elements elements_symbol_unique; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.elements
+    ADD CONSTRAINT elements_symbol_unique UNIQUE (symbol);
 
 
 --
@@ -131,6 +201,22 @@ ALTER TABLE ONLY public.properties
 
 ALTER TABLE ONLY public.properties
     ADD CONSTRAINT properties_pkey PRIMARY KEY (atomic_number);
+
+
+--
+-- Name: types types_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.types
+    ADD CONSTRAINT types_pkey PRIMARY KEY (type_id);
+
+
+--
+-- Name: properties fk_atomic_number_element; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.properties
+    ADD CONSTRAINT fk_atomic_number_element FOREIGN KEY (atomic_number) REFERENCES public.elements(atomic_number);
 
 
 --
