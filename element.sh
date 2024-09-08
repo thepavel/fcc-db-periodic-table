@@ -23,5 +23,13 @@ fi
 
 IFS='|' ELEMENT=($ELEMENT_RESULT)
 
-OUTPUT="The element with atomic number ${ELEMENT[0]} is ${ELEMENT[2]} (${ELEMENT[1]}). It's a nonmetal, with a mass of 1.008 amu. Hydrogen has a melting point of -259.1 celsius and a boiling point of -252.9 celsius."
+# echo ${ELEMENT[0]} atomic_number
+# echo ${ELEMENT[1]} symbol
+# echo ${ELEMENT[2]} name
+# echo ${ELEMENT[3]} type
+# echo ${ELEMENT[4]} atomic_mass
+# echo ${ELEMENT[5]} boiling_point
+# echo ${ELEMENT[6]} melting_point
+
+OUTPUT="The element with atomic number ${ELEMENT[0]} is ${ELEMENT[2]} (${ELEMENT[1]}). It's a ${ELEMENT[3]}, with a mass of ${ELEMENT[4]} amu. ${ELEMENT[2]} has a melting point of ${ELEMENT[6]} celsius and a boiling point of ${ELEMENT[5]} celsius."
 echo $OUTPUT
