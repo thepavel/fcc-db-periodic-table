@@ -14,9 +14,11 @@ else
   if [[ $1 =~ ^[0-9]+$ ]] 
   then
     ATOMIC_NUMBER=$1
+    echo -e "\nSearching for element with atomic number $1"
     ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, properties.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number WHERE elements.atomic_number = $ATOMIC_NUMBER")
   else 
     SEARCH_TERM="$1"
+    echo -e "\nSearching for element with symbol or name $1"
     ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, properties.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number WHERE elements.name = '$SEARCH_TERM' OR elements.symbol = '$SEARCH_TERM'")
   fi
 fi
@@ -31,5 +33,5 @@ IFS='|' ELEMENT=($ELEMENT_RESULT)
 # echo ${ELEMENT[5]} boiling_point
 # echo ${ELEMENT[6]} melting_point
 
-OUTPUT="The element with atomic number ${ELEMENT[0]} is ${ELEMENT[2]} (${ELEMENT[1]}). It's a ${ELEMENT[3]}, with a mass of ${ELEMENT[4]} amu. ${ELEMENT[2]} has a melting point of ${ELEMENT[6]} celsius and a boiling point of ${ELEMENT[5]} celsius."
+echo -e "\nThe element with atomic number ${ELEMENT[0]} is ${ELEMENT[2]} (${ELEMENT[1]}). It's a ${ELEMENT[3]}, with a mass of ${ELEMENT[4]} amu. ${ELEMENT[2]} has a melting point of ${ELEMENT[6]} celsius and a boiling point of ${ELEMENT[5]} celsius."
 echo $OUTPUT
