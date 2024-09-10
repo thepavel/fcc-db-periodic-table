@@ -15,10 +15,10 @@ else
   if [[ $1 =~ ^[0-9]+$ ]] # if the argument is a number, treat it as an atomic_number int
   then
     ATOMIC_NUMBER=$1
-    ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, properties.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number WHERE elements.atomic_number = $ATOMIC_NUMBER")
+    ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, types.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number inner join types on properties.type_id = types.type_id WHERE elements.atomic_number = $ATOMIC_NUMBER")
   else # otherwise, it could be a symbol or a name. symbols are up to 3 characters. names are all longer, but just matching on either for now
     SEARCH_TERM="$1"
-    ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, properties.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number WHERE elements.name = '$SEARCH_TERM' OR elements.symbol = '$SEARCH_TERM'")
+    ELEMENT_RESULT=$($PSQL "SELECT elements.atomic_number, elements.symbol, elements.name, types.type, properties.atomic_mass, properties.boiling_point_celsius, properties.melting_point_celsius FROM elements inner join properties on elements.atomic_number = properties.atomic_number inner join types on properties.type_id = types.type_id WHERE elements.name = '$SEARCH_TERM' OR elements.symbol = '$SEARCH_TERM'")
   fi
 
   if [[ -z $ELEMENT_RESULT ]]
